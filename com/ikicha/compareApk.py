@@ -16,22 +16,16 @@ if num_argv<3:
     print "compareApk.pyc [APK FILE NAME] [RES FOLDER IN PROJECT] ... ( RES FOLDER CAN BE ONE OR MORE )"
     exit()
 
-if num_argv>=2:
-    myZip = zipfile.ZipFile(argv[1])
-else:
-    myZip = zipfile.ZipFile("../../TouchTest/bin/TouchTest.apk")
-     
-apkFileNames = myZip.namelist()
+with zipfile.ZipFile(argv[1]) as myZip: 
+    apkFileNames = myZip.namelist()
+
 resFileFromApk = []
 for name in filter(lambda s:'res/' in s and 'drawable' in s, apkFileNames):
     resFileFromApk.append(str(name.split("res/")[1]))
 
 resFileFromProject = []
 
-if num_argv>=3:
-    roots = argv[2:]
-else:
-    roots = ["../../TouchTest/res", "../../res"]
+roots = argv[2:]
     
 for root in roots:
     for base, dirs, names in os.walk(root):
