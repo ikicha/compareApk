@@ -20,18 +20,20 @@ with zipfile.ZipFile(argv[1]) as myZip:
     apkFileNames = myZip.namelist()
 
 resFileFromApk = []
-for name in filter(lambda s:'res/' in s and 'drawable' in s, apkFileNames):
+for name in filter(lambda s:'res/' in s and not 'values' in s, apkFileNames):
     resFileFromApk.append(str(name.split("res/")[1]))
 
 resFileFromProject = []
 
 roots = argv[2:]
-    
+   
+ignoreFileName = ["Thumbs.db"]
+
 for root in roots:
     for base, dirs, names in os.walk(root):
-        if("res"+os.path.sep in base and "drawable" in base):
+        if("res"+os.path.sep in base and not "values" in base):
             for name in names:
-                if name != "Thumbs.db":
+                if not name in ignoreFileName:
                     resFileFromProject.append(str(os.path.join(base.split("res"+os.path.sep)[1], name)).replace('\\', '/'))
             
 resFileFromApk.sort()            
